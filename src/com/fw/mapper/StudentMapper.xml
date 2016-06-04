@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fw.mapper.StudentMapper">
+
+	<resultMap type="com.fw.model.Major" id="majorResultMap">
+		<id column="mid" property="mid"></id>
+		<result column="mname" property="mname"></result>
+	</resultMap>
+
+	<resultMap type="com.fw.model.Classes" id="classesResultMap">
+		<id column="cid" property="cid"></id>
+		<result column="cname" property="cname"></result>
+		<association property="major" javaType="com.fw.model.Major"
+			resultMap="majorResultMap" />
+
+	</resultMap>
+
+
+	<resultMap type="com.fw.model.Student" id="selectBySidRM">
+		<id column="sid" property="sid"></id>
+		<result column="sno" property="sno"></result>
+		<result column="name" property="name"></result>
+		<result column="password" property="password"></result>
+		<result column="age" property="age"></result>
+		<result column="gender" property="gender"></result>
+		<result column="resume" property="resume"></result>
+		<association property="classes" javaType="com.fw.model.Classes"
+			resultMap="classesResultMap" />
+
+
+	</resultMap>
+
+	<select id="selectBySno" resultType="com.fw.model.Student"
+		parameterType="com.fw.model.Student">
+		select * from _student where sno = #{sno}
+	</select>
+
+	<select id="selectBySnoAndPassword" resultType="com.fw.model.Student"
+		parameterType="com.fw.model.Student">
+		select * from _student where sno = #{sno} and password =
+		#{password}
+	</select>
+
+	<select id="selectBySid" resultMap="selectBySidRM"
+		parameterType="com.fw.model.Student">
+		select
+		s.sid,s.sno,s.name,s.age,s.gender,s.resume,c.cid,c.cname,m.mid,m.mname
+		from _student s join _classes c on
+		s.cid = c.cid join _major m on c.mid
+		= m.mid where sid = #{sid}
+	</select>
+
+
+	<update id="updateStudent" parameterType="com.fw.model.Student">
+		update _student set
+		name = #{name}, age = #{age}, gender = #{gender}, resume = #{resume}
+		where sid = #{sid}
+	</update>
+
+	<select id="selectPassword" parameterType="int" resultType="string">
+		select password from _student where sid = #{sid}
+	</select>
+
+	<update id="updatePassword" parameterType="com.fw.model.Student">
+		update _student set
+		password = #{newPassword}
+		where sid = #{sid} and password =
+		#{password}
+	</update>
+
+
+
+
+	<select id="getFollowingEidList" parameterType="int" resultType="int">
+		select distinct eid from _stu_ent where sid = #{sid}
+	</select>
+
+
+	<select id="findFollowingEnterpriseList" resultType="com.fw.model.Enterprise">
+		select * from _enterprise where eid in
+		<foreach collection="ids" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		limit #{begin},#{limit}
+	</select>
+
+	<select id="getEidList" parameterType="map" resultType="int">
+		select eid from _enterprise
+
+		<where>
+			<if test="list.size()>0">
+				and eid not in
+				<foreach collection="list" item="item" index="index" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<select id="findEnterpriseList" resultType="com.fw.model.Enterprise">
+		select * from _enterprise
+		<where>
+			<if test="ids != null">
+				and eid in
+				<foreach collection="ids" item="item" index="index" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		limit #{begin},#{limit}
+	</select>
+
+	<select id="getFollowingEidListByName" resultType="int">
+		select
+		distinct e.eid from _stu_ent se join _enterprise e on se.eid=e.eid
+		where se.sid = #{sid} and e.name like #{name}
+	</select>
+
+
+	<select id="getEidListByName" resultType="int">
+		select eid from _enterprise where name like #{name} and eid not in
+		<foreach collection="ids" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+
+	<update id="followEnterprise">
+		insert into _stu_ent values(null,#{sid},#{eid})
+	</update>
+
+	<update id="unfollowEnterprise">
+		delete from _stu_ent where sid = #{sid} and eid =
+		#{eid}
+	</update>
+
+	<select id="selectCount" resultType="int">
+		select count(*) from
+		_student
+	</select>
+
+	<select id="selectAll" resultMap="selectBySidRM">
+		select
+		s.sid,s.sno,s.name,s.age,s.gender,s.resume,c.cid,c.cname,m.mid,m.mname
+		from _student s join _classes c on
+		s.cid = c.cid join _major m on c.mid
+		= m.mid limit #{begin},#{limit}
+	</select>
+
+	<select id="selectClasses" resultType="com.fw.model.Classes">
+		select * from _classes
+	</select>
+
+	<update id="updateStudentByAdmin">
+		update _student set name=#{name} ,age=#{age},
+		gender=#{gender} , cid=#{classes.cid} where sid=#{sid}
+	</update>
+
+	<insert id="addStudent" parameterType="com.fw.model.Student">
+		insert into _student
+		values(null,#{sno},#{name},md5('000000'),#{age},#{gender},'',#{classes.cid})
+	</insert>
+	
+	
+	<delete id="deleteStuEntBySid">
+		delete from _stu_ent where sid=#{sid}
+	</delete>
+	<delete id="deleteEntStuBySid">
+		delete from _ent_stu where sid = #{sid}
+	</delete>
+	
+	<select id="selectSubmitPathBySid" resultType="string">
+		select _submit_path from _stu_pro where sid=#{sid}
+	</select>
+	
+	<delete id="deleteStuProBySid">
+		delete from _stu_pro where sid = #{sid}
+	</delete>
+	
+	<select id="selectResumeBySid" resultType="string">
+		select resume from _student where sid = #{sid}
+	</select>
+	
+	<delete id="deleteBySid">
+		delete from _student where sid = #{sid}
+	</delete>
+	
+	
+	
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - @localhost" uuid="4b6b6c42-b6a9-4b03-bf48-0c41605549ee">
+    <database-info product="MySQL" version="5.6.26-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="fw"/>
+    <table name="_admin" schema="" catalog="fw" type="TABLE">
+      <column name="aid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="aid"/>
+      <index name="name" unique="true" columns="name"/>
+    </table>
+    <table name="_classes" schema="" catalog="fw" type="TABLE">
+      <column name="cid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="cname" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="mid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="cid"/>
+      <foreign-key name="_classes_ibfk_1" columns="mid" ref-table="_major" ref-schema="" ref-catalog="fw" ref-columns="mid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="_student_ibfk_1" table="_student" schema="" catalog="fw" columns="cid"/>
+      <index name="name" unique="true" columns="cname"/>
+    </table>
+    <table name="_ent_stu" schema="" catalog="fw" type="TABLE">
+      <column name="esid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="eid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="esid"/>
+      <foreign-key name="_ent_stu_ibfk_1" columns="eid" ref-table="_enterprise" ref-schema="" ref-catalog="fw" ref-columns="eid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="_ent_stu_ibfk_2" columns="sid" ref-table="_student" ref-schema="" ref-catalog="fw" ref-columns="sid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="eid" unique="true" columns="sid"/>
+    </table>
+    <table name="_enterprise" schema="" catalog="fw" type="TABLE">
+      <column name="eid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="email" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="phone" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="username" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="address" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="status" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="eid"/>
+      <exported-key name="_ent_stu_ibfk_1" table="_ent_stu" schema="" catalog="fw" columns="eid"/>
+      <exported-key name="_project_ibfk_1" table="_project" schema="" catalog="fw" columns="eid"/>
+      <exported-key name="_stu_ent_ibfk_2" table="_stu_ent" schema="" catalog="fw" columns="eid"/>
+    </table>
+    <table name="_major" schema="" catalog="fw" type="TABLE">
+      <column name="mid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="mname" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="mid"/>
+      <exported-key name="_classes_ibfk_1" table="_classes" schema="" catalog="fw" columns="mid"/>
+      <index name="name" unique="true" columns="mname"/>
+    </table>
+    <table name="_project" schema="" catalog="fw" type="TABLE">
+      <column name="pid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="pname" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="_publish_time" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12" def="J0NVUlJFTlRfVElNRVNUQU1QJw=="/>
+      <column name="attachment" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="eid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="pid"/>
+      <foreign-key name="_project_ibfk_1" columns="eid" ref-table="_enterprise" ref-schema="" ref-catalog="fw" ref-columns="eid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="_stu_pro_ibfk_2" table="_stu_pro" schema="" catalog="fw" columns="pid"/>
+    </table>
+    <table name="_stu_ent" schema="" catalog="fw" type="TABLE">
+      <column name="seid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="eid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="seid"/>
+      <foreign-key name="_stu_ent_ibfk_1" columns="sid" ref-table="_student" ref-schema="" ref-catalog="fw" ref-columns="sid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="_stu_ent_ibfk_2" columns="eid" ref-table="_enterprise" ref-schema="" ref-catalog="fw" ref-columns="eid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="sid" unique="true" columns="eid"/>
+    </table>
+    <table name="_stu_pro" schema="" catalog="fw" type="TABLE">
+      <column name="spid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="pid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="_submit_time" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12" def="J0NVUlJFTlRfVElNRVNUQU1QJw=="/>
+      <column name="praise" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <column name="_submit_number" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="_submit_path" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="spid"/>
+      <foreign-key name="_stu_pro_ibfk_1" columns="sid" ref-table="_student" ref-schema="" ref-catalog="fw" ref-columns="sid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="_stu_pro_ibfk_2" columns="pid" ref-table="_project" ref-schema="" ref-catalog="fw" ref-columns="pid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="sid" unique="true" columns="pid"/>
+    </table>
+    <table name="_student" schema="" catalog="fw" type="TABLE">
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="sno" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="age" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="gender" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="resume" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="cid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="sid"/>
+      <foreign-key name="_student_ibfk_1" columns="cid" ref-table="_classes" ref-schema="" ref-catalog="fw" ref-columns="cid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="_ent_stu_ibfk_2" table="_ent_stu" schema="" catalog="fw" columns="sid"/>
+      <exported-key name="_stu_ent_ibfk_1" table="_stu_ent" schema="" catalog="fw" columns="sid"/>
+      <exported-key name="_stu_pro_ibfk_1" table="_stu_pro" schema="" catalog="fw" columns="sid"/>
+    </table>
+  </data-source>
+</component>

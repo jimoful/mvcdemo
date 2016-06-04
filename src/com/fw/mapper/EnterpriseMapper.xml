@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fw.mapper.EnterpriseMapper">
+
+	<select id="selectByEmail" parameterType="com.fw.model.Enterprise"
+		resultType="com.fw.model.Enterprise">
+		select eid
+		from
+		_enterprise where email = #{email}
+	</select>
+
+	<select id="selectStatus" parameterType="com.fw.model.Enterprise"
+		resultType="int">
+		select status from _enterprise where email = #{email}
+	</select>
+
+	<select id="selectByEmailAndPassword" parameterType="com.fw.model.Enterprise"
+		resultType="com.fw.model.Enterprise">
+		select eid
+		from
+		_enterprise where email = #{email} and
+		password = #{password}
+	</select>
+
+	<select id="selectByEid" parameterType="int" resultType="com.fw.model.Enterprise">
+		select
+		eid,name,email,username,phone,description,address from _enterprise
+		where eid = #{eid}
+	</select>
+
+	<update id="updateEnterprise" parameterType="com.fw.model.Enterprise">
+		update _enterprise
+		set email = #{email}, username=
+		#{username},phone=#{phone},description=#{description},address =
+		#{address} where eid=#{eid}
+	</update>
+
+	<select id="selectPassword" parameterType="int" resultType="string">
+		select password from _enterprise where eid = #{eid}
+	</select>
+
+	<update id="updatePassword" parameterType="com.fw.model.Enterprise">
+		update _enterprise set
+		password = #{newPassword}
+		where eid = #{eid} and password =
+		#{password}
+	</update>
+
+	<select id="getFollowingSidList" parameterType="int" resultType="int">
+		select distinct sid from _ent_stu where eid = #{eid}
+	</select>
+
+	<select id="findFollowingStudentList" resultType="com.fw.model.Student">
+		select * from _student where sid in
+		<foreach collection="ids" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		limit #{begin},#{limit}
+	</select>
+
+	<select id="getSidList" resultType="int">
+		select sid from _student
+		<where>
+			<if test="list.size()>0">
+				sid not in
+				<foreach collection="list" item="item" index="index" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<insert id="followStudent">
+		insert into _ent_stu values(null,#{eid},#{sid})
+	</insert>
+
+	<delete id="unfollowStudent">
+		delete from _ent_stu where eid = #{eid} and sid =
+		#{sid}
+	</delete>
+
+	<select id="selectCount" resultType="int">
+		select count(*) from
+		_enterprise where status=1
+	</select>
+
+	<select id="selectAll" resultType="com.fw.model.Enterprise">
+		select * from _enterprise
+		where status=1 limit #{begin},#{limit}
+	</select>
+
+	<insert id="addEnterprise" parameterType="com.fw.model.Enterprise">
+		insert into _enterprise
+		values(null,#{email},#{phone},#{username},#{name},md5('000000'),#{description},#{address},1)
+	</insert>
+
+	<insert id="insertEnterprise" parameterType="com.fw.model.Enterprise">
+		insert into
+		_enterprise
+		values(null,#{email},#{phone},#{username},#{name},#{password},#{description},#{address},0)
+	</insert>
+
+	<select id="selectCountByStatus" resultType="int">
+		select count(*) from
+		_enterprise where status=0
+	</select>
+
+	<select id="selectAllByStatus" resultType="com.fw.model.Enterprise">
+		select * from
+		_enterprise
+		where status=0 limit #{begin},#{limit}
+	</select>
+
+	<update id="updateStatusToOne">
+		update _enterprise set status=1 where eid = #{eid}
+	</update>
+
+
+
+	<delete id="deleteStuEntBySid">
+		delete from _stu_ent where eid=#{eid}
+	</delete>
+	<delete id="deleteEntStuBySid">
+		delete from _ent_stu where eid = #{eid}
+	</delete>
+
+	<select id="selectPidListByEid" resultType="int">
+		select pid from
+		_project where eid = #{eid}
+	</select>
+
+	<select id="selectSubmitPathByPid" resultType="string">
+		select _submit_path from _stu_pro
+		<where>
+			pid in
+			<foreach collection="list" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</select>
+
+	<delete id="deleteStuProByPid">
+		delete from _stu_pro
+		<where>
+			pid in
+			<foreach collection="list" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</delete>
+
+	<select id="selectAttachmentByPid" resultType="string">
+		select attachment from _project
+		<where>
+			pid in
+			<foreach collection="list" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</select>
+
+	<delete id="deleteProjectByPid">
+		delete from _project
+		<where>
+			pid in
+			<foreach collection="list" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</delete>
+
+	<delete id="deleteByEid">
+		delete from _enterprise where eid = #{eid}
+	</delete>
+
+
+	<select id="selectCountByEmail" resultType="int">
+		select count(*) from
+		_enterprise where email = #{email}
+	</select>
+</mapper>
+
+

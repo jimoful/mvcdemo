@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fw.mapper.ProjectMapper">
+
+	<resultMap type="com.fw.model.Enterprise" id="enterpriseResultMap">
+		<id column="eid" property="eid" />
+		<result column="name" property="name" />
+	</resultMap>
+
+	<resultMap type="com.fw.model.Student" id="studentResultMap">
+		<id column="sid" property="sid" />
+		<result column="sno" property="sno" />
+		<result column="name" property="name" />
+	</resultMap>
+
+	<resultMap type="com.fw.model.Project" id="projectResultMap">
+		<id column="pid" property="pid" />
+		<result column="pname" property="pname" />
+		<result column="description" property="description" />
+		<result column="_publish_time" property="publishTime" />
+		<result column="attachment" property="attachment" />
+
+		<association property="enterprise" javaType="com.fw.model.Enterprise"
+			resultMap="enterpriseResultMap" />
+	</resultMap>
+
+	<resultMap type="com.fw.model.StuPro" id="spResultMap">
+		<id column="spid" property="spid" />
+		<result column="sid" property="student.sid" />
+		<result column="pid" property="project.pid" />
+		<result column="_submit_time" property="submitTime" />
+		<result column="_submit_number" property="submitNumber" />
+		<result column="_submit_path" property="submitPath" />
+		<result column="praise" property="praise" />
+
+		<association property="project" javaType="com.fw.model.Project"
+			resultMap="projectResultMap" />
+	</resultMap>
+
+	<resultMap type="com.fw.model.StuPro" id="spResultMap2">
+		<id column="spid" property="spid" />
+		<result column="sid" property="student.sid" />
+		<result column="pid" property="project.pid" />
+		<result column="_submit_time" property="submitTime" />
+		<result column="_submit_number" property="submitNumber" />
+		<result column="_submit_path" property="submitPath" />
+		<result column="praise" property="praise" />
+
+		<association property="student" javaType="com.fw.model.Student"
+			resultMap="studentResultMap" />
+		<association property="project" javaType="com.fw.model.Project"
+			resultMap="projectResultMap" />
+	</resultMap>
+
+	<insert id="insertProject" parameterType="com.fw.model.Project">
+		insert into _project
+		values(null,#{pname},#{description},#{publishTime},#{attachment},#{enterprise.eid})
+	</insert>
+
+	<select id="selectCountByEid" resultType="int">
+		select count(*) from
+		_project where eid = #{eid}
+	</select>
+
+	<select id="selectByEid" resultMap="projectResultMap">
+		select p.*,e.name from
+		_project p join _enterprise e on p.eid=e.eid where
+		p.eid = #{eid} limit
+		#{begin},#{limit}
+	</select>
+
+	<select id="selectByPid" resultType="com.fw.model.Project">
+		select * from _project where
+		pid = #{pid}
+	</select>
+
+	<update id="updateProject">
+		update _project set
+		pname=#{pname},description=#{description},attachment=#{attachment}
+		where pid=#{pid}
+	</update>
+
+	<select id="selectCount" resultType="int">
+		select count(*) from
+		_project
+	</select>
+
+	<select id="selectAll" resultMap="projectResultMap">
+		select p.*,e.name from _project
+		p join _enterprise e on p.eid=e.eid
+		order by _publish_time desc
+		limit
+		#{begin},#{limit}
+	</select>
+
+	<select id="selectCountByPname" resultType="int">
+		select count(*) from
+		_project where pname like #{pname}
+	</select>
+
+	<select id="selectByPname" resultMap="projectResultMap">
+		select p.*,e.name from
+		_project
+		p join _enterprise e
+		on p.eid=e.eid where p.pname like #{pname}
+		limit
+		#{begin},#{limit}
+	</select>
+
+	<select id="selectBySidAndPid" resultMap="spResultMap">
+		select *
+		from _stu_pro
+		where sid =
+		#{sid} and pid=#{pid}
+	</select>
+
+	<insert id="insertStuPro" parameterType="com.fw.model.StuPro">
+		insert into _stu_pro
+		values(null,#{student.sid},#{project.pid},#{submitTime},#{praise},#{submitNumber},#{submitPath})
+	</insert>
+
+	<update id="updateStuPro" parameterType="com.fw.model.StuPro">
+		update _stu_pro set
+		_submit_number=#{submitNumber},
+		_submit_path=#{submitPath},
+		_submit_time=#{submitTime} where spid=
+		#{spid}
+	</update>
+
+	<select id="selectCountBySid" resultType="int">
+		select count(*) from
+		_stu_pro where sid = #{sid}
+	</select>
+
+	<select id="selectBySid" resultMap="spResultMap">
+		select sp.*,p.*,e.eid,e.name
+		from _stu_pro sp join _project p on
+		sp.pid=p.pid join _enterprise e on
+		p.eid=e.eid where sp.sid = #{sid} limit #{begin},#{limit}
+	</select>
+
+	<select id="selectStuPro" resultMap="spResultMap2">
+		select sp.*,s.sid,s.sno,s.name
+		from _stu_pro sp join _student s on
+		sp.sid=s.sid where sp.pid = #{pid}
+	</select>
+
+	<update id="updateStuProPraise">
+		update _stu_pro set praise = #{praise} where
+		spid=#{spid}
+	</update>
+
+</mapper>
