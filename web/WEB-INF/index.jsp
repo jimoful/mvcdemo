@@ -13,7 +13,7 @@
             #navbar-brand{
             	margin-top:5px;
                 margin-left: 16px;
-                font-weight: 450;
+                font-weight: 400;
                 font-size: 33px;
                 color:#185188;
             }
@@ -96,6 +96,7 @@
 			<div class="form-group">
 				<div class="col-sm-4 col-sm-offset-4">
 					<span class="codeError"></span>
+                    
 				</div>
 			</div>
 	
@@ -293,7 +294,7 @@
 					$("#i2").attr("class","hidden");
 				}
 			});
-			
+			//更新验证码，点击一下发出src请求，每次后面多加一个？。
 			$(".verificationCode").click(function(){
 				var code = $(".verificationCode").attr("src");
 				$(".verificationCode").attr("src",code+"?");
