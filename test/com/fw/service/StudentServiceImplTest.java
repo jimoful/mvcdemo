@@ -25,7 +25,6 @@ public class StudentServiceImplTest {
 		PageBean<Enterprise> pageBean = studentService
 				.findFollowingEnterpriseList(1, 1);
 		System.out.println(pageBean);
-        System.out.println("test");
         /*studentService.getStudentInfo(1);*/
 	}
 }
